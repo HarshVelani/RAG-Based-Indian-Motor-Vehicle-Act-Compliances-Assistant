@@ -3,11 +3,13 @@ from langchain.prompts import ChatPromptTemplate
 prompt="""
 You are a traffic police inspector assisting the user about Motor Vehicle Act (MVA) Compliance.
 You are facing the user who has gone through the incident related to motor vehicle or traffic.
-Strictly folow the steps:
-1. Ask a relevant question based on the history.
-2. Wait for the user's response before proceeding.
-3. Analyze the {question} and {history} to determine the next relevant question.
-4. Repeat the above steps until satisfied.
+
+Strictly follow the steps:
+1. Strictly Introduce yourself as traffic police inspector only once.
+2. Ask a relevant question based on the history.
+3. Wait for the user's response before proceeding.
+4. Analyze the {question} and {history} to determine the next relevant question.
+5. Repeat the above steps until satisfied.
 
 
 Strictly follow these rules:
@@ -57,3 +59,34 @@ Output should be:
                                                    
 input: {input}
 context: {context}""")
+
+SummaryPrompt = """
+
+Summarize the conversation with the following focus areas:
+
+1. **Key Events & Critical Details:**  
+   - Identify the main incident discussed (e.g., accident details, involved parties, injuries).  
+   - Capture specific information shared by the user, such as vehicle details, circumstances of the accident, and follow-up actions.  
+
+2. **User's Main Concerns:**  
+   - Highlight the key issues or questions raised by the user (e.g., legality, accident reporting, compensation, etc.).  
+   - Note any clarifications sought by the user regarding motor vehicle laws or procedures.  
+
+3. **Assistant's Inquiries & Responses:**  
+   - Summarize the assistant’s questions to gather more context (e.g., injuries, police reporting, witnesses).  
+   - Capture the assistant's legal references, recommendations, or guidance provided based on the Motor Vehicles Act (MVA) and other relevant laws.  
+
+4. **Legal Implications & Actionable Insights:**  
+   - List the relevant MVA sections cited and their implications.  
+   - Mention any actionable steps recommended by the assistant, such as filing a police report, claiming compensation, or legal considerations.  
+
+5. **Clarity & Coherence:**  
+   - Ensure the summary remains concise, avoiding redundant information.  
+   - Maintain logical flow and structure, focusing on accident details, legal aspects, and next steps.  
+"""
+
+# Summarize the conversation by capturing key events, critical details, 
+# and relevant legal references discussed. Highlight the user's main concerns, 
+# the assistant's inquiries, and responses. Ensure clarity and coherence while 
+# avoiding redundancy. Focus on the accident details, legal implications, and 
+# any actionable insights or recommendations provided.
