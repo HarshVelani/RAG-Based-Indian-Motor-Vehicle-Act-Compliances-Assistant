@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 import re
+from prompts import SummaryPrompt
 
 
 
@@ -31,7 +32,7 @@ def conversation_memory():
     llm = ChatGroq(groq_api_key="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", model_name="llama3-8b-8192")
 
     # Initialize memory to store conversation history
-    return ConversationSummaryMemory(llm=llm, return_messages=True)
+    return ConversationSummaryMemory(llm=llm, return_messages=True, summarypromt=SummaryPrompt)
 
 
 
@@ -87,9 +88,12 @@ def make_retieval_chain(llm, prompt, vector_data):
     document_chain = create_stuff_documents_chain(llm, prompt)
 
     # Input--->Retriever--->vectorstoredb
-    # Create Retrieve
-    retriever = vector_data.as_retriever(similarity_score_threshold=0.3)
-    retrieval_chain = create_retrieval_chain(retriever,document_chain)
+    # Create Retrieve    
+    # - (search_type="similarity_score_threshold", similarity_score_threshold=0.3)
+    # - (search_type="mmr")
+    # - (search_kwargs={"k": 1})
+    retriever = vector_data.as_retriever(search_type="mmr", search_kwargs={"k": 5})
+    retrieval_chain = create_retrieval_chain(retriever, document_chain)
     return retrieval_chain
 
 
