@@ -13,7 +13,7 @@ load_vectorDB = load_data_from_VectorDB(embedding)
 memory = conversation_memory()
 
 while True:
-    
+
     user_input = input("Enter: ")
 
     if user_input.lower() in ["quit", "bye"]:
@@ -33,8 +33,8 @@ while True:
         history = chat_summary.content
         response = retrieval_chain.invoke({"input":history})
 
-        # # Save conversation in memory
-        memory.save_context({"input": user_input}, {"output": response['answer']})
+        # # # Save conversation in memory
+        # memory.save_context({"input": user_input}, {"output": response['answer']})
 
         clean_retreived_response(response)
         print("\n=============================================\n")
