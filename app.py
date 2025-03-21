@@ -22,8 +22,9 @@ while True:
         break
     
     response = chat_with_llm(llm, SystemPrompt, user_input, memory)
-    print("1.======"+response)
     print("\n=============================================\n")
+    print("===>"+response)
+
 
     if "MVA Sections = TRUE" in response:
         
