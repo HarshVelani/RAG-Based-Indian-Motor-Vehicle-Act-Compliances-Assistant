@@ -1,31 +1,67 @@
 import asyncio
 import websockets
 import json
+from def_functions import *
+from initialize_variables import *
+from prompts import *
 
-async def listen_messages(websocket):
-    async for message in websocket:
-        data = json.loads(message)
-        if data["type"] == "system":
-            print(f"[SYSTEM]: {data['message']}")
-        elif data["type"] == "chat":
-            print(f"[{data['client_id']}]: {data['message']}")
-
-async def chat_client():
+async def chat_with_ai():
     uri = "ws://localhost:8765"
-    
-    async with websockets.connect(uri) as websocket:
-        # Start listening for messages
-        asyncio.create_task(listen_messages(websocket))
-        
-        print("Connected to the chat server. Type your message and press Enter.")
-        
-        while True:
-            msg = input()
-            if msg.lower() in ["exit", "quit"]:
-                print("Disconnecting...")
-                break
-            
-            await websocket.send(json.dumps({"message": msg}))
 
-if __name__ == "__main__":
-    asyncio.run(chat_client())
+    try:
+        async with websockets.connect(uri) as websocket:
+            print("Connected to AI Server!")
+
+            while True:
+                try:
+                    response = await websocket.recv()  # Receive AI response
+                    data = json.loads(response)
+                    
+
+                    if "MVA SECTION" in data['response']:
+                        print(f"AI ({data['client_id']}): {data['response']}")
+                        break
+                    
+                    user_input = input("You: ")  # Get user input
+                    print(f"AI ({data['client_id']}): {data['response']}")
+                    
+                    # if "MVA Sections = TRUE" in response:
+                    #     embedding = load_embedding()
+                    #     load_vectorDB = load_data_from_VectorDB(embedding)
+                    #     retrieval_chain = make_retieval_chain(llm, RetrievalPrompt, load_vectorDB)
+
+                    #     chat_summary = memory.load_memory_variables({})["history"][0]        
+                    #     history = chat_summary.content
+                    #     response = retrieval_chain.invoke({"input":history})
+
+                    #     # # # Save conversation in memory
+                    #     # memory.save_context({"input": user_input}, {"output": response['answer']})
+
+                    #     clean_retreived_response(response)
+                    #     print("\n=============================================\n")
+                    #     print("Goodbye!")
+                    #     print("Chat Summary:", memory.load_memory_variables({})["history"])
+                
+                except json.JSONDecodeError:
+                    print("Error: Invalid JSON received from server.")
+                except websockets.exceptions.ConnectionClosed:
+                    print("Server disconnected unexpectedly.")
+                    break
+
+                
+
+                if user_input.lower() in ["quit", "exit"]:
+                    print("Goodbye!")
+                    print("Disconnected from AI Server.")
+                    break
+
+                await websocket.send(user_input)  # Send message to server
+
+
+    except websockets.exceptions.ConnectionClosedError as e:
+        print(f"WebSocket Error: {e}")
+    except Exception as e:
+        print(f"Unexpected Error: {e}")
+
+
+asyncio.run(chat_with_ai())
