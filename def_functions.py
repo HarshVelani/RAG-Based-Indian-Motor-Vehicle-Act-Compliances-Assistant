@@ -75,7 +75,7 @@ def load_data_from_VectorDB(embeddings):
 
     db = QdrantVectorStore(
         client = client,
-        embeddings = embeddings,
+        embedding = embeddings,
         collection_name = collection_name
     )
     print("\n============================= Data Loaded =============================\n")
