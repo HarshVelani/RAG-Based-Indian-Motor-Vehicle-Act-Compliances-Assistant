@@ -1,9 +1,9 @@
 from langchain_groq import ChatGroq
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains import create_retrieval_chain
 from qdrant_client import QdrantClient
-from langchain_community.vectorstores import Qdrant
+from langchain_qdrant import QdrantVectorStore
 from langchain.schema import HumanMessage
 from langchain.memory import ConversationSummaryMemory
 from dotenv import load_dotenv
@@ -36,12 +36,12 @@ def conversation_memory():
 
 
 
-def quit_conversation(user_input, memory):
-    if user_input.lower() in ["quit", "bye"]:
-        print("Good Bye")
-        print("Chat Summary:")
-        print(memory.load_memory_variables({})["history"])
-        return False
+# def quit_conversation(user_input, memory):
+#     if user_input.lower() in ["quit", "bye"]:
+#         print("Good Bye")
+#         print("Chat Summary:")
+#         print(memory.load_memory_variables({})["history"])
+#         return False
 
 
 
@@ -73,7 +73,7 @@ def load_data_from_VectorDB(embeddings):
     # print(client)
     print("\n============================= Client Loaded...=============================\n")
 
-    db = Qdrant(
+    db = QdrantVectorStore(
         client = client,
         embeddings = embeddings,
         collection_name = collection_name
@@ -103,5 +103,4 @@ def clean_retreived_response(response):
     raw_text = response['answer']
     # Remove Markdown-style formatting (e.g., '**' for bold)
     clean_text = re.sub(r'\*\*', '', raw_text)
-    print(clean_text)
-    print("\n============================= Response Loaded =============================\n")
+    return clean_text
