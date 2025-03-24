@@ -29,7 +29,7 @@ def chat_with_llm(llm, prompt_template, user_input, memory):
 
 def conversation_memory():
     # Initialize ChatGroq LLM (Replace with your API key)
-    llm = ChatGroq(groq_api_key="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", model_name="llama3-8b-8192")
+    llm = ChatGroq(groq_api_key="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", model_name="llama3-70b-8192")
 
     # Initialize memory to store conversation history
     return ConversationSummaryMemory(llm=llm, return_messages=True, summarypromt=SummaryPrompt)
@@ -51,10 +51,15 @@ def load_embedding():
     model_kwargs = {'device': 'cpu'}
     encode_kwargs = {'normalize_embeddings': False}
 
+
+    # embedding = HuggingFaceEmbeddings()  # Initialize correctly
+    # embedded_data = embedding.embed_documents(your_data)  # Use method to embed
+    # load_vectorDB = load_data_from_VectorDB(embedded_data)  # Pass result correctly
+
     embeddings= HuggingFaceEmbeddings(
-        model_name=model_name,
-        model_kwargs=model_kwargs,
-        encode_kwargs=encode_kwargs
+        model_name=model_name
+        # model_kwargs=model_kwargs,
+        # encode_kwargs=encode_kwargs
     )
     print("\n============================= Embedding Model Loaded...=============================\n")
     return embeddings
