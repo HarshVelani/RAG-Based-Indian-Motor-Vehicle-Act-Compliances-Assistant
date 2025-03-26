@@ -12,8 +12,6 @@ import os
 import re
 from prompts import SummaryPrompt
 
-
-
 def chat_with_llm(llm, prompt_template, user_input, memory):
     # Retrieve past conversation history
     history = memory.load_memory_variables({})["history"]
@@ -25,33 +23,18 @@ def chat_with_llm(llm, prompt_template, user_input, memory):
     memory.save_context({"input": user_input}, {"output": response.content})
     return response.content
 
-
-
 def conversation_memory():
     # Initialize ChatGroq LLM (Replace with your API key)
-    llm = ChatGroq(groq_api_key="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", model_name="llama3-70b-8192")
+    # llm = ChatGroq(groq_api_key="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", model_name="llama3-70b-8192")
 
     # Initialize memory to store conversation history
-    return ConversationSummaryMemory(llm=llm, return_messages=True, summarypromt=SummaryPrompt)
-
-
-
-# def quit_conversation(user_input, memory):
-#     if user_input.lower() in ["quit", "bye"]:
-#         print("Good Bye")
-#         print("Chat Summary:")
-#         print(memory.load_memory_variables({})["history"])
-#         return False
-
-
+    return ConversationSummaryMemory(llm=ChatGroq(groq_api_key="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", model_name="llama3-70b-8192"), return_messages=True, summarypromt=SummaryPrompt)
 
 def load_embedding():
     # LOCAL
     model_name = 'BAAI/bge-base-en'
     model_kwargs = {'device': 'cpu'}
     encode_kwargs = {'normalize_embeddings': False}
-
-
     # embedding = HuggingFaceEmbeddings()  # Initialize correctly
     # embedded_data = embedding.embed_documents(your_data)  # Use method to embed
     # load_vectorDB = load_data_from_VectorDB(embedded_data)  # Pass result correctly
@@ -63,8 +46,6 @@ def load_embedding():
     )
     print("\n============================= Embedding Model Loaded...=============================\n")
     return embeddings
-
-
 
 def load_data_from_VectorDB(embeddings):
     # Load Data from Vector-DB
@@ -86,8 +67,6 @@ def load_data_from_VectorDB(embeddings):
     print("\n============================= Data Loaded =============================\n")
     return db
 
-
-
 def make_retieval_chain(llm, prompt, vector_data):
     # Create document chain
     document_chain = create_stuff_documents_chain(llm, prompt)
@@ -100,8 +79,6 @@ def make_retieval_chain(llm, prompt, vector_data):
     retriever = vector_data.as_retriever(search_type="mmr", search_kwargs={"k": 5})
     retrieval_chain = create_retrieval_chain(retriever, document_chain)
     return retrieval_chain
-
-
 
 def clean_retreived_response(response):
     # Extract text from the response dictionary
