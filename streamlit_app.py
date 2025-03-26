@@ -56,7 +56,7 @@ SystemPrompt=ChatPromptTemplate.from_messages([
 RetrievalPrompt = ChatPromptTemplate.from_template("""
 you are a traffic police inspector, advicing and explaining the MVA sections.
 Based on the input, 
-- if any section is ommited then mention and highlight that.
+
 - Explain all the given context.
 - provide punishment and fine only from "- Punishment and Fines" from context,
 - specify and explain if there is any state amendment if provided for particular section, pecisely based only on the provided context.
@@ -92,7 +92,7 @@ damages, weather, and road conditions, Cover legal implications such as applicab
 traffic laws, fault determination, insurance claims, liability, potential violations, 
 penalties, and relevant legal precedents, legal rights, compensation, filing complaints, 
 and interactions with law enforcement or insurance companies, legal rights, compensation, 
-filing complaints, Traffic signal violation, Excessive speed,
+filing complaints, Traffic signal violation, Excessive speed, mentally or physically unfit to drive,
 speed limit, traffic rules violation, traffic laws violation, traffic regulations, 
 traffic signs violation, traffic signal violation, Overtaking, lane discipline,
 overcrowded vehicle, overloading, driving under the influence of alcohol or drugs,
