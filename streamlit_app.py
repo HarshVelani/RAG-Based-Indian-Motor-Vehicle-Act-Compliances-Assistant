@@ -20,14 +20,15 @@ Strictly follow the steps:
 3. Analyze the {question} and {history} to determine the next relevant question.
 4. Repeat the above steps until satisfied.
 
-
 Strictly follow these rules:
 - Ask only one question at a time and wait for the user's response before proceeding to the next question.
 - Strictly do not list multiple questions at once.
 - Strictly if user's response is 'yes' or 'Yes' then accept it in Positive way and move forward.
 - Strictly if user's response is 'no' or 'No' then accept it in Negative way and move forward.
 - Strictly ignore and move forward if user's response is 'i dont know' or 'i dont know about that' or similar to this.
-- Strictly Use history to ask related questions without repeating any previously asked questions.
+- Strictly Use history to ask questions without repeating any previously asked questions.
+- Strictly do not stick on registration related questions.
+- Ask dynamic and precise questions.
 - Strictly ask only the question without any introduction or repetition of greetings.
 - do not ask this type of questions. example: "Was the vehicle involved in any kind of accident at the time of registration?"
 - Strictly do not ask many questions.
@@ -52,8 +53,6 @@ SystemPrompt=ChatPromptTemplate.from_messages([
                 ("human", "{question}")
             ])
 
-
-
 RetrievalPrompt = ChatPromptTemplate.from_template("""
 you are a traffic police inspector, advicing and explaining the MVA sections.
 Based on the input, 
@@ -77,8 +76,37 @@ then again start with the upper format for next section
 input: {input}
 context: {context}""")
 
-SummaryPrompt = """
+KeywordPrompt = """
+Strictly do not include Date and time, Location, Parties involved, Type of vehicle(s),
+person name, address, phone number, email, etc.
+Follow below rules:
+- Strictly Extract only the key terms, phrases, and important entities which are present in the {history} {question} Strictly do not include
+words or phrases other than this. 
+- Avoid forming sentences or narratives. 
+- Focus on capturing essential topics, names, concepts, and actions.
+- Strictly do not include any personal information.
+- Strictly do not include any irrelevant information.
 
+Example keywords: maybe parties involved, type of vehicle(s), nature of the collision, injuries, 
+damages, weather, and road conditions, Cover legal implications such as applicable 
+traffic laws, fault determination, insurance claims, liability, potential violations, 
+penalties, and relevant legal precedents, legal rights, compensation, filing complaints, 
+and interactions with law enforcement or insurance companies, legal rights, compensation, 
+filing complaints, Traffic signal violation, Excessive speed,
+speed limit, traffic rules violation, traffic laws violation, traffic regulations, 
+traffic signs violation, traffic signal violation, Overtaking, lane discipline,
+overcrowded vehicle, overloading, driving under the influence of alcohol or drugs,
+driving without a license, driving without insurance, driving without a helmet,
+driving without a seatbelt, driving without a registration certificate,
+driving without a pollution under control certificate, driving without a permit,
+driving without a fitness certificate, driving without a valid permit, alcohol or drugs,
+drunken, etc.
+"""
+
+
+SummaryPrompt = """
+Summarize the conversation based on the user's query and the assistant's responses capturing
+semantic meaning. If the user says yes to any question, summarize it as a positive response and viceversa.
 Summarize the conversation by capturing key events, critical details, 
 and relevant legal references discussed regarding a motor vehicle and 
 traffic-related incident. Highlight the main concerns raised by the user, 
@@ -90,10 +118,13 @@ traffic laws, fault determination, insurance claims, liability, potential violat
 penalties, and relevant legal precedents. Address investigative aspects, including 
 police reports, witness statements, evidence collection 
 (CCTV, dashcam footage, accident reconstruction), and procedural requirements. 
-Capture the user’s concerns regarding legal rights, compensation, filing complaints, 
-and interactions with law enforcement or insurance companies. Summarize the 
-assistant’s responses, including clarifications on legal procedures, recommendations 
-for documentation, guidance on next steps, and alternative resolutions. Finally, 
+Capture the words related to vehicle type like **"Car, Bus, Truck, Motorcycle, Scooter, 
+Auto Rickshaw, Bicycle, Pedestrian, etc."** and also like **" passenger vehicle,
+commercial vehicle, private vehicle, public transport vehicle, two-wheeler,
+three-wheeler, four-wheeler, etc."**. Capture the user’s concerns regarding legal rights, 
+compensation, filing complaints, and interactions with law enforcement or insurance 
+companies. Summarize the assistant’s responses, including clarifications on legal procedures, 
+recommendations for documentation, guidance on next steps, and alternative resolutions. Finally, 
 include actionable insights such as steps for legal recourse, safety measures, 
 and best practices in handling post-accident legalities while ensuring all 
 important words and phrases are retained and additional relevant 
@@ -106,7 +137,7 @@ driving without a license, driving without insurance, driving without a helmet,
 driving without a seatbelt, driving without a registration certificate,
 driving without a pollution under control certificate, driving without a permit,
 driving without a fitness certificate, driving without a valid permit, etc."**
-
+if anyone is drunken then strictly mention as they were involved in alcohol or drugs.
 """
 
 load_dotenv()
@@ -137,74 +168,105 @@ def load_data_from_VectorDB(embeddings):
     db = QdrantVectorStore(client=client, embedding=embeddings, collection_name=collection_name)
     return db
 
-def make_retieval_chain(llm, prompt, vector_data):
+def make_retrieval_chain(llm, prompt, vector_data):
     '''
-    - (search_type="similarity_score_threshold", similarity_score_threshold=0.3)
+    - (similarity_score_threshold=0.3)
     - (search_type="mmr", search_kwargs={"k": 5})
     - (search_kwargs={"k": 1})'''
     
     document_chain = create_stuff_documents_chain(llm, prompt)
-    retriever = vector_data.as_retriever(search_type="mmr", search_kwargs={"k": 5})
+    retriever = vector_data.as_retriever(search_type="mmr", search_kwargs={"k": 8})
     retrieval_chain = create_retrieval_chain(retriever, document_chain)
     return retrieval_chain
 
-def clean_retreived_response(response):
+def clean_retrieved_response(response):
     raw_text = response['answer']
     clean_text = re.sub(r'\*\*', '', raw_text)
     return clean_text
 
 # Initialize ChatGroq LLM (Replace with your API key)
-'''
-- llama3-8b-8192
-- llama3-70b-8192
-- deepseek-r1-distill-llama-70b
-- qwen-2.5-32b
-'''
+# - llama3-8b-8192
+# - llama3-70b-8192
+# - deepseek-r1-distill-llama-70b
+# - qwen-2.5-32b
 
 llm = ChatGroq(groq_api_key=os.getenv("GROQ_API_KEY"), model_name="qwen-2.5-32b")
 embedding = load_embedding()
 load_vectorDB = load_data_from_VectorDB(embedding)
 memory = conversation_memory()
+history = ""
 
 st.title("Motor Vehicle Act Compliance LLM Chatbot")
 st.subheader("A conversational AI chatbot powered by LLMs")
 
+# ✅ Ensure session state is initialized
+if "memory" not in st.session_state:
+    st.session_state.memory = conversation_memory()
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+# Display previous messages
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
+# Get user input
 user_input = st.chat_input("Ask me anything...")
 if user_input:
     st.session_state.messages.append({"role": "user", "content": user_input})
     with st.chat_message("user"):
         st.markdown(user_input)
-    
-    response = chat_with_llm(llm, SystemPrompt, user_input, memory)
 
-    if "MVA Sections = TRUE" in response or "mva section" in user_input.lower() or "mva sections" in user_input.lower() or user_input.lower() in ['quit', 'exit']:
-        retrieval_chain = make_retieval_chain(llm, RetrievalPrompt, load_vectorDB)
-        chat_summary = memory.load_memory_variables({})["history"][0]        
-        history = chat_summary.content
-        response = retrieval_chain.invoke({"input": history})
-        clean_response = clean_retreived_response(response)
-        
-        print("=======CHAT MEMORY: ",history)
-        # Clear chat memory
-        memory.clear()
-        if not memory:
-            print("======================= EMPTY Memory  =======================")
-        
+    # Load chat history from session memory
+    chat_memory = st.session_state.memory.load_memory_variables({})
+    history = chat_memory.get("history", [])
+
+    # Generate LLM response for MVA Sections Retrieval
+    prompt = SystemPrompt.format(history=history, question=user_input)
+    response = llm.invoke([HumanMessage(content=prompt)])
+    model_output = response.content
+
+    # Save conversation history to session state memory
+    st.session_state.memory.save_context({"input": user_input}, {"output": model_output})
+
+    # Debugging: Display updated memory
+    updated_memory = st.session_state.memory.load_memory_variables({})
+    st.write(updated_memory["history"])
+
+    # Check if retrieval is needed
+    if any(keyword in user_input.lower() for keyword in ["mva section", "mva sections"]) or any(keyword in user_input.lower() for keyword in ["quit", "exit"])or "MVA Sections = TRUE" in model_output:
+        retrieval_chain = make_retrieval_chain(llm, RetrievalPrompt, load_vectorDB)
+
+        # Reload chat history after saving
+        chat_memory = st.session_state.memory.load_memory_variables({})
+        history = chat_memory.get("history", [])
+
+        chat_summary = history[0].content if history else ""
+
+        # Generate LLM response for keywords extraction
+        prompt = KeywordPrompt.format(history=history, question=user_input)
+        response = llm.invoke([HumanMessage(content=prompt)])
+        keywords = response.content
+
+        st.write("Keywords extracted:", keywords) # Debugging
+
+        # Retrieve relevant information
+        retrieval_response = retrieval_chain.invoke({"input": keywords})
+        clean_response = clean_retrieved_response(retrieval_response)
+        # final_response = chat_summary + "\n" + clean_response
+
+        st.session_state.memory.clear()
+
+        # Check if memory is empty
+        if st.session_state.memory.load_memory_variables({})["history"][0].content == "":  # Works for lists, dicts, and other empty collections
+            st.write("\n\n========================Memory cleared!========================\n\n")
+
+        # Append final response and display
         st.session_state.messages.append({"role": "assistant", "content": clean_response})
         with st.chat_message("assistant"):
             st.markdown(clean_response)
 
-    elif "MVA Sections = TRUE" not in response or "mva section" not in user_input.lower() or "mva sections" not in user_input.lower():
-        st.session_state.messages.append({"role": "assistant", "content": response})
+    else:
+        st.session_state.messages.append({"role": "assistant", "content": model_output})
         with st.chat_message("assistant"):
-            st.markdown(response)
-    
-            
-    
+            st.markdown(model_output)
