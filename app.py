@@ -74,10 +74,10 @@ def make_retieval_chain(llm, prompt, vector_data):
 
     # Input--->Retriever--->vectorstoredb
     # Create Retrieve    
-    # - (search_type="similarity_score_threshold", similarity_score_threshold=0.3)
-    # - (search_type="mmr")
+    # - (similarity_score_threshold=0.3)
+    # - (search_type="mmr", search_kwargs={"k": 5})
     # - (search_kwargs={"k": 1})
-    retriever = vector_data.as_retriever(search_type="similarity_score_threshold", similarity_score_threshold=0.3)
+    retriever = vector_data.as_retriever(search_type="mmr", search_kwargs={"k": 5})
     retrieval_chain = create_retrieval_chain(retriever, document_chain)
     return retrieval_chain
 
@@ -114,6 +114,10 @@ while True:
     print("\n=============================================\n")
     print("===>"+response)
 
+    chat_summary = memory.load_memory_variables({})["history"][0]        
+    history = chat_summary.content
+    print("\n==============================my car ===============\n", history)
+
 
     if "MVA Sections = TRUE" in response:
         
@@ -121,6 +125,7 @@ while True:
 
         chat_summary = memory.load_memory_variables({})["history"][0]        
         history = chat_summary.content
+        print("\n=============================================\n", history)
         response = retrieval_chain.invoke({"input":history})
 
         # # # Save conversation in memory
