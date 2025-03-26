@@ -75,3 +75,61 @@ On March 13, 2025, at around 6:50 AM , an overcrowded passenger van carrying 18 
 ### Bus Falls Into Gorge, 18 Dead, 25 Injured 
 
 On March 15, 2025 , at around 4:30 AM , a passenger bus traveling from Dehradun to Haridwar lost control on a steep curve near Rishikesh and plunged into a 200-foot gorge , killing 18 passengers and injuring 25 others . The accident occurred due to overspeeding and driver fatigue, with investigations revealing poor vehicle maintenance and faulty brakes. The transport company and driver were booked for overloading and operating without a proper permit. The tragedy led to stricter hill-road safety measures, including mandatory GPS tracking for buses, driver fatigue checks, and reinforced guardrails on dangerous curves.
+
+
+
+# News Incidents
+
+#
+There were two BBA (Bachelor of Business Administration) students in the Audi, which was being driven recklessly. The car rammed the scooter and then hit a tree. A case of rash driving and endangering the safety of others was registered and the driver of the Audi has been arrested. The two men on the scooter - identified as Naitik and Tushar - were taken to the AIIMS trauma centre. One of them is stable while the other is critical
+
+#
+A tractor driver busy making a 'reel' on Thursday by doing stunts on the road hit a bike, killing a Class 10 student and injuring his friend in Gautam Buddha Nagar district of Uttar Pradesh, according to police officials. They said Lalit (17) was on his way to fetch his admit card for the high school examination from Inter College located in Jhanjhar village along with his friend Munesh on a bike. Rabupura police station in-charge Sujit Upadhyay said a tractor driver was making a video for his reel by doing stunts on the road when his tractor hit the bike. He said bike rider Lalit died on the spot in the incident, while his friend Munesh was seriously injured. mva sections
+
+#
+A driver from Himachal Pradesh was killed and 17 pilgrims were injured when a bus returning from Mata Vaishno Devi shrine skidded off the road and plunged into a 30-feet gorge near Jammu on Saturday evening, officials said. Chief Minister Omar Abdullah expressed grief over the accident and praised the rescue teams and officials for their prompt and commendable effort.The bus, bearing registration number UK-07PA-5640, was on its way to Delhi and the accident took place near Manda, nearly eight kilometres from the Jammu bus stand, the officials said. They said a rescue operation was launched soon after the driver lost control while negotiating a curve and the bus plunged into the gorge. mva sections
+
+#
+A woman died after being hit by a speeding car while crossing an expressway in Karnataka's Chitradurga. CCTV footage showed her being tossed in the air and she died on the spot due to a head injury. The incident took place last Sunday. The 30-second CCTV clip showed the victim with another woman and two children trying to cross the expressway at night. The woman had reached the second lane from the divider when the car hit her and fled at high speed. In the impact, the woman was flung in the air and landed on the ground three lanes away while the other woman and children, who were following her, narrowly escaped death. The video showed another man rushing to check on her. A police case has been registered and an investigation is underway. Efforts are being made to identify the car and the driver. mva sections
+
+#
+Four persons died and 19 others were injured after a Varanasi-Jaipur bus rammed into a stationary truck on the Agra-Lucknow Expressway on Saturday morning, police said. According to police, the bus crashed into the truck from behind in the Fatehabad police station area in Agra around 5.30 am. ACP Fatehabad Amardeep Lal said, "The bodies of the deceased have been sent for post-mortem examination. One of the deceased persons is yet to be identified. All the injured have been sent to the hospital with the help of an ambulance." Of the deceased, three have been identified - Govind (68), a resident of Rajasthan; Ramesh (45), a resident of Rajasthan and Deepak Verma (40), a resident of Agra. Four injured persons have been admitted to a private hospital, while the rest have been admitted to a government hospital. mva sections
+
+#
+a worker was killed after he was hit by a BMW car being driven by a diamond merchant on the Coastal Road. The incident took place when the road was partially open to the public. According to the police, all workers, including the victim, were completing their assigned tasks when a loud sound on the southbound corridor caught everyone's attention. All the workers rushed to the spot and saw a blue BMW car parked by the roadside, while the victim was lying in the middle of the road. mva sections
+
+#
+the car first overtaking a white WagonR and then a Toyota Fortuner at high speed. The driver was seen crisscrossing lanes and then ramming into the divider on the right side. The crash left the luxury car completely mangled, however, the driver only suffered minor injuries, mva sections
+
+#
+Five people were injured in a road accident in Hanumakonda on Friday after an Innova car driver lost control of the vehicle and collided with a lorry, then hit a biker.The incident occurred in the early hours of today, police said. According to the Sub Inspector of Hanumakonda police station, a case has been registered in connection with the accident, and an investigation is underway to ascertain the circumstances leading to the crash. mva sections
+
+#
+My daughter went to the US in 2012 and did her MS there. We got information at 4 AM today that a vehicle on the wrong route hit the car in which our family was travelling, leading to their spot death. I don't have more details about the accident. My son-in-law and my eight-month-old grandson survived. mva sections
+
+#
+The accident took place at 3.30 pm in Shivni area of Akola when Mr Bidkar was pillion riding on a two-wheeler. He was taken to a private hospital, where he was declared dead. Rajdatta Mankar (48), who was riding the two-wheeler, also died in the accident. mva sections
+
+#
+A collision between a truck and an auto took place in the early hours of Tuesday near the Muthani area in the Mohania police station area of Kaimur district. The collision, which resulted in the death of three people and left two injured, occurred when the pilgrims were returning from Mahakumbh being held in Prayagraj. The accident occurred when the driver who was sleepy collided with the truck. The people from Aurangabad. Three people died and two were injured. mva sections
+
+#
+A couple died and four other persons were injured when their car collided with a truck while they were returning from the Maha Kumbh on Monday. the truck has been seized and the driver has been detained. mva sections
+
+#
+the Scorpio, being driven from Delhi to Begusarai, lost control after a tyre burst and collided with the divider. The car then overturned six times in the middle of the road before settling on the divider. Seven people including four children were on board. No casualties were reported in the incident. mva sections
+
+#
+A drunk Russian woman in Chhattisgarh's Raipur created a ruckus on the road after her car collided with a scooter, injuring three men. The woman was in the car with her lawyer friend who was driving the vehicle. The car collided with the scooter and three men - Neelkamal Sahu, Lalit Chandel and Arun Vishwakarma - were seriously injured. They were taken to the hospital but when the police arrived, the woman was heard screaming and asking for her phone. mva sections
+
+#
+The Maha Kumbh pilgrimage of six people turned tragic after they were killed in a road accident in Uttar Pradesh. A trailer truck hit the pickup truck the devotees were travelling by in Ghazipur this afternoon. Six of them - two men, two women and two children - were killed in the accident while ten people sustained injuries. mva sections
+
+#
+Four Army soldiers were injured on Monday in a road accident in Jammu and Kashmir's Poonch district. an Army vehicle skidded off the road at Gantar Morh in the Sunjian area of Poonch and overturned after dropping into a ditch. The injured soldiers were immediately evacuated with the help of local people and shifted to hospital for treatment. mva sections
+
+#
+Three men were killed when their car rammed into a truck parked on the roadside in this Uttar Pradesh district on Tuesday, police said. The accident took place in the Babina area on the Jhansi-Lalitpur national highway in the evening, they said, adding that the driver of the car lost control over the vehicle while trying to save a puppy. In an attempt to save the animal, the driver lost control over the car, which rammed into a truck parked on the roadside. mva sections
+
+#
+The incident occurred around 3:15 PM on Hill Park Road when a truck allegedly hit Mr Jaiswal's motorcycle. Following the crash, the 23-year-old was rushed to a hospital's trauma ward, where he succumbed to his injuries, according to police reports. The truck driver was immediately taken into police custody, and the vehicle was seized. An offence has been registered at the Amboli police station. mva sections
