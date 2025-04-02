@@ -11,8 +11,10 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 import re
-from prompts import SummaryPrompt
 
+
+
+# Define a function to chat with the LLM
 def chat_with_llm(llm, prompt_template, user_input, memory):
     # Retrieve past conversation history
     history = memory.load_memory_variables({})["history"]
@@ -24,12 +26,9 @@ def chat_with_llm(llm, prompt_template, user_input, memory):
     memory.save_context({"input": user_input}, {"output": response.content})
     return response.content
 
-def conversation_memory():
-    # Initialize ChatGroq LLM (Replace with your API key)
-    # llm = ChatGroq(groq_api_key="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", model_name="llama3-70b-8192")
-
+def conversation_memory(llm):
     # Initialize memory to store conversation history
-    return ConversationSummaryMemory(llm=ChatGroq(groq_api_key="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", model_name="llama3-70b-8192"), return_messages=True, summarypromt=SummaryPrompt)
+    return ConversationSummaryMemory(llm=llm, return_messages=True, summarypromt=SummaryPrompt)
 
 def load_embedding():
     # LOCAL
@@ -68,7 +67,7 @@ def load_data_from_VectorDB(embeddings):
     print("\n============================= Data Loaded =============================\n")
     return db
 
-def make_retieval_chain(llm, prompt, vector_data):
+def make_retrieval_chain(llm, prompt, vector_data):
     # Create document chain
     document_chain = create_stuff_documents_chain(llm, prompt)
 
@@ -81,12 +80,19 @@ def make_retieval_chain(llm, prompt, vector_data):
     retrieval_chain = create_retrieval_chain(retriever, document_chain)
     return retrieval_chain
 
-def clean_retreived_response(response):
+def clean_retrieved_response(response):
     # Extract text from the response dictionary
     raw_text = response['answer']
     # Remove Markdown-style formatting (e.g., '**' for bold)
     clean_text = re.sub(r'\*\*', '', raw_text)
     return clean_text
+
+def clean_deepseek_output(response: str) -> str:
+    # Remove <think> tags and their content
+    response = re.sub(r'<think>.*?</think>', '', response, flags=re.DOTALL)
+    
+    # Extract only the output (assuming it follows the last </think> tag or is standalone)
+    return response.strip()
 
 
 
@@ -95,46 +101,56 @@ def clean_retreived_response(response):
 # llama3-70b-8192
 # deepseek-r1-distill-llama-70b
 # qwen-2.5-32b
+# qwen-qwq-32b
+# gemma2-9b-it
 
-llm = ChatGroq(groq_api_key="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", model_name="qwen-2.5-32b")
+chat_llm = ChatGroq(groq_api_key=os.getenv("GROQ_API_KEY"), model_name="qwen-2.5-32b")
+summary_llm = ChatGroq(groq_api_key=os.getenv("GROQ_API_KEY"), model_name="llama3-70b-8192")
+retrieval_llm = ChatGroq(groq_api_key=os.getenv("GROQ_API_KEY2"), model_name="qwen-2.5-32b")
+
 embedding = load_embedding()
 load_vectorDB = load_data_from_VectorDB(embedding)
-memory = conversation_memory()
+memory = conversation_memory(summary_llm)
 
 while True:
 
     user_input = input("Enter: ")
 
-    if user_input.lower() in ["quit", "bye"]:
-        print("Goodbye!")
-        print("Chat Summary:", memory.load_memory_variables({})["history"])
-        break
-    
-    response = chat_with_llm(llm, SystemPrompt, user_input, memory)
+    response = chat_with_llm(chat_llm, SystemPrompt, user_input, memory)
     print("\n=============================================\n")
-    print("===>"+response)
+    print(">>>>> " + clean_deepseek_output(response))
 
     chat_summary = memory.load_memory_variables({})["history"][0]        
     history = chat_summary.content
-    print("\n==============================my car ===============\n", history)
+    print("\n===Chat Summary===\n", history)
 
 
-    if "MVA Sections = TRUE" in response:
-        
-        retrieval_chain = make_retieval_chain(llm, RetrievalPrompt, load_vectorDB)
+    # Check if retrieval is needed
+    if any(keyword in user_input.lower() for keyword in ["mva section", "mva sections", "quit", "exit"]) or "MVA Sections = TRUE" in response:
+        retrieval_chain = make_retrieval_chain(chat_llm, RetrievalPrompt, load_vectorDB)
 
-        chat_summary = memory.load_memory_variables({})["history"][0]        
-        history = chat_summary.content
-        print("\n=============================================\n", history)
-        response = retrieval_chain.invoke({"input":history})
+        # Generate LLM response for keywords extraction
+        prompt = KeywordPrompt.format(history=history, question=user_input)
+        response = chat_llm.invoke([HumanMessage(content=prompt)])
+        keywords = response.content
 
-        # # # Save conversation in memory
-        # memory.save_context({"input": user_input}, {"output": response['answer']})
+        print("\n\nKeywords extracted:", keywords) # Debugging
 
-        clean_retreived_response(response)
+        # Retrieve relevant information
+        retrieval_response = retrieval_chain.invoke({"input": keywords})
+
+        memory.clear()
+
+        # Check if memory is empty
+        if memory.load_memory_variables({})["history"][0].content == "":  # Works for lists, dicts, and other empty collections
+            print("\n\n======================== Memory cleared! ========================\n\n")
+
+        print("\n\nRetrieval Response:\n", retrieval_response["answer"]) # Debugging
         print("\n=============================================\n")
+        # print(clean_retrieved_response(retrieval_response))
+        # print(clean_deepseek_output(retrieval_response["answer"]))
+        # print("\n=============================================\n")
         print("Goodbye!")
-        print("Chat Summary:", memory.load_memory_variables({})["history"])
         break
 
 # challan was issued by traffic police even after i followed the traffic rules
